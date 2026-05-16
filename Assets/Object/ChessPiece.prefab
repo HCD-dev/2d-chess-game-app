@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4818459937055821508}
   - component: {fileID: 308583357347863133}
+  - component: {fileID: 1989131264886667122}
   m_Layer: 0
   m_Name: ChessPiece
   m_TagString: Untagged
@@ -26,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 7570479899363893078}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.22, y: -1.536, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -91,3 +92,29 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &1989131264886667122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7570479899363893078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1eabc96d2e7c2643ada4c6c07042d13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Chessman
+  controller: {fileID: 0}
+  movePlate: {fileID: 0}
+  black_queen: {fileID: -2628853326628446179, guid: b520970aa69f6e049b3f1986a4030bbd, type: 3}
+  black_knight: {fileID: -334450713805299198, guid: bf96f89eca8e34143a6e208803d951c9, type: 3}
+  black_bishop: {fileID: -6414592721767173361, guid: 47bcfb64c71830642a4435492e69e718, type: 3}
+  black_king: {fileID: -641104846605737351, guid: b3bc7d944123e8347af1c37cae8d4028, type: 3}
+  black_pawn: {fileID: -4341603147912474925, guid: 020db8edabd8d8043a3d764402dddad1, type: 3}
+  black_rook: {fileID: -7587791273309554880, guid: 5c4327fbe430b634ca11a23621b4811d, type: 3}
+  white_queen: {fileID: 7270707491364550308, guid: 4bcda19c5836caf4483e3c730e400f3d, type: 3}
+  white_knight: {fileID: 8769669200613306614, guid: c60c1f13e351c1046b375ceafabfc9f9, type: 3}
+  white_bishop: {fileID: 7560534232159598683, guid: 07b60867c766c204bae7ef1f34c4e269, type: 3}
+  white_king: {fileID: -3792998861040722889, guid: edd797fd5c59b6540b14a5d1ea10ad53, type: 3}
+  white_pawn: {fileID: 5580225292014371162, guid: d21f70a59c33de248b1d4f01615dfd22, type: 3}
+  white_rook: {fileID: -8948728166497563328, guid: 62f880af51134164ba0d2a221a0bfb74, type: 3}
