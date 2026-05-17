@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &7570479899363893078
+--- !u!1 &7397315355687425178
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,40 +8,40 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4818459937055821508}
-  - component: {fileID: 308583357347863133}
-  - component: {fileID: 1989131264886667122}
-  - component: {fileID: -8488080077196755279}
+  - component: {fileID: 2833538771233173989}
+  - component: {fileID: 5689435139421850653}
+  - component: {fileID: -444063399710478023}
+  - component: {fileID: -740048074162390652}
   m_Layer: 0
-  m_Name: ChessPiece
-  m_TagString: Untagged
+  m_Name: MovePlate_0
+  m_TagString: MovePlate
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4818459937055821508
+--- !u!4 &2833538771233173989
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7570479899363893078}
+  m_GameObject: {fileID: 7397315355687425178}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -1}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &308583357347863133
+--- !u!212 &5689435139421850653
 SpriteRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7570479899363893078}
+  m_GameObject: {fileID: 7397315355687425178}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -81,52 +81,39 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -3792998861040722889, guid: edd797fd5c59b6540b14a5d1ea10ad53, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: -5682780217911200517, guid: 5a0b615cbe1849b428ca71472e7f7204, type: 3}
+  m_Color: {r: 0, g: 0.9245283, b: 0.09516683, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.18, y: 0.18}
+  m_Size: {x: 0.2, y: 0.2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &1989131264886667122
+--- !u!114 &-444063399710478023
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7570479899363893078}
+  m_GameObject: {fileID: 7397315355687425178}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1eabc96d2e7c2643ada4c6c07042d13, type: 3}
+  m_Script: {fileID: 11500000, guid: 52395227305c3294ba3614a60cd7c717, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Chessman
+  m_EditorClassIdentifier: Assembly-CSharp::MovePlate
   controller: {fileID: 0}
-  movePlate: {fileID: 7397315355687425178, guid: c3f2333db602c1e4798022c62daf42ff, type: 3}
-  player: 
-  black_queen: {fileID: -2628853326628446179, guid: b520970aa69f6e049b3f1986a4030bbd, type: 3}
-  black_knight: {fileID: -334450713805299198, guid: bf96f89eca8e34143a6e208803d951c9, type: 3}
-  black_bishop: {fileID: -6414592721767173361, guid: 47bcfb64c71830642a4435492e69e718, type: 3}
-  black_king: {fileID: -641104846605737351, guid: b3bc7d944123e8347af1c37cae8d4028, type: 3}
-  black_pawn: {fileID: -4341603147912474925, guid: 020db8edabd8d8043a3d764402dddad1, type: 3}
-  black_rook: {fileID: -7587791273309554880, guid: 5c4327fbe430b634ca11a23621b4811d, type: 3}
-  white_queen: {fileID: 7270707491364550308, guid: 4bcda19c5836caf4483e3c730e400f3d, type: 3}
-  white_knight: {fileID: 8769669200613306614, guid: c60c1f13e351c1046b375ceafabfc9f9, type: 3}
-  white_bishop: {fileID: 7560534232159598683, guid: 07b60867c766c204bae7ef1f34c4e269, type: 3}
-  white_king: {fileID: -3792998861040722889, guid: edd797fd5c59b6540b14a5d1ea10ad53, type: 3}
-  white_pawn: {fileID: 5580225292014371162, guid: d21f70a59c33de248b1d4f01615dfd22, type: 3}
-  white_rook: {fileID: -8948728166497563328, guid: 62f880af51134164ba0d2a221a0bfb74, type: 3}
---- !u!61 &-8488080077196755279
+  attack: 0
+--- !u!61 &-740048074162390652
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7570479899363893078}
+  m_GameObject: {fileID: 7397315355687425178}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
@@ -159,7 +146,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 0.2, y: 0.2}
-    newSize: {x: 0.18, y: 0.18}
+    newSize: {x: 0.2, y: 0.2}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0

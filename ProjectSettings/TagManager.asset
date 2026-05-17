@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Board
+  - MovePlate
   layers:
   - Default
   - TransparentFX

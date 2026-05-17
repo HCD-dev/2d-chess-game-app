@@ -18,32 +18,32 @@ public class Game : MonoBehaviour
     void Start()
     {
         // White back rank (y = 0)
-        Create("white_rook", 0, 0);
-        Create("white_knight", 1, 0);
-        Create("white_bishop", 2, 0);
-        Create("white_queen", 3, 0);
-        Create("white_king", 4, 0);
-        Create("white_bishop", 5, 0);
-        Create("white_knight", 6, 0);
-        Create("white_rook", 7, 0);
+        Create("white_rook_0", 0, 0);
+        Create("white_knight_0", 1, 0);
+        Create("white_bishop_0", 2, 0);
+        Create("white_queen_0", 3, 0);
+        Create("white_king_0", 4, 0);
+        Create("white_bishop_0", 5, 0);
+        Create("white_knight_0", 6, 0);
+        Create("white_rook_0", 7, 0);
 
         // White pawns (y = 1)
         for (int x = 0; x < 8; x++)
-            Create("white_pawn", x, 1);
+            Create("white_pawn_0", x, 1);
 
         // Black back rank (y = 7)
-        Create("black_rook", 0, 7);
-        Create("black_knight", 1, 7);
-        Create("black_bishop", 2, 7);
-        Create("black_queen", 3, 7);
-        Create("black_king", 4, 7);
-        Create("black_bishop", 5, 7);
-        Create("black_knight", 6, 7);
-        Create("black_rook", 7, 7);
+        Create("black_rook_0", 0, 7);
+        Create("black_knight_0", 1, 7);
+        Create("black_bishop_0", 2, 7);
+        Create("black_queen_0", 3, 7);
+        Create("black_king_0", 4, 7);
+        Create("black_bishop_0", 5, 7);
+        Create("black_knight_0", 6, 7);
+        Create("black_rook_0", 7, 7);
 
         // Black pawns (y = 6)
         for (int x = 0; x < 8; x++)
-            Create("black_pawn", x, 6);
+            Create("black_pawn_0", x, 6);
 
         // Artýk ayrý bir dizide döngüyle SetPosition çaðýrmaya gerek yok
     }
@@ -123,4 +123,22 @@ public class Game : MonoBehaviour
 
         positions[x, y] = obj;
     }
+    public void SetPositionEmpty(int x, int y)
+    {
+
+        positions[x, y] = null;
+
+    }
+    public GameObject GetPosition(int x, int y)
+    { return positions[x, y]; }
+
+    public bool PositionOnBoard(int x, int y)
+
+    {
+        if (x < 0 || y < 0 || x >= positions.GetLength(0) || y >= positions.GetLength(1)) return false;
+        return true;
+
+
+    }
+
 }
