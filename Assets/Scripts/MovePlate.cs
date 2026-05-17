@@ -41,7 +41,23 @@ public class MovePlate : MonoBehaviour
         if (attack)
         {
             GameObject cp = controller.GetComponent<Game>().GetPosition(matrixX, matrixY);
-            Destroy(cp);
+            if (cp != null)
+            {
+                string cpName = cp.name ?? "";
+                if (cpName == "white_king_0")
+                {
+                    controller.GetComponent<Game>().Winner("black");
+                }
+                else if (cpName == "black_king_0")
+                {
+                    controller.GetComponent<Game>().Winner("white");
+                }
+                Destroy(cp);
+            }
+            else
+            {
+                Debug.LogWarning($"[MovePlate] Attack attempted on empty square {matrixX},{matrixY}");
+            }
         }
         controller.GetComponent<Game>().SetPositionEmpty(reference.GetComponent<Chessman>().GetXBoard(),
             reference.GetComponent<Chessman>().GetYBoard());
@@ -51,7 +67,7 @@ public class MovePlate : MonoBehaviour
         reference.GetComponent<Chessman>().SetCoords();
 
         controller.GetComponent<Game>().SetPosition(reference);
-
+        controller.GetComponent<Game>().NextTurn();
         reference.GetComponent<Chessman>().DestroyMovePlates();
 
     }

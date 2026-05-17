@@ -135,9 +135,13 @@ public class Chessman : MonoBehaviour
     }
     private void OnMouseUp()
     {
-        Debug.Log($"[Chessman] Clicked '{name}' at {Xboard},{Yboard}");
+        if (!controller.GetComponent<Game>().IsGameOver() && controller.GetComponent<Game>().GetCurrentPlayer() == player)
+        {
+
+            Debug.Log($"[Chessman] Clicked '{name}' at {Xboard},{Yboard}");
             DestroyMovePlates();
-        InitiateMovePlates();
+            InitiateMovePlates();
+        }
     }
     public void DestroyMovePlates()
     {
