@@ -264,16 +264,28 @@ public class Chessman : MonoBehaviour
     public void PawnMovePlate(int x, int y)
     {
         Game sc = controller.GetComponent<Game>();
-        if (sc.PositionOnBoard(x,y))
+        // Ýleri bir kare
+        if (sc.PositionOnBoard(x, y))
         {
             if (sc.GetPosition(x, y) == null)
             {
                 MovePlateSpawn(x, y);
+
+                // Ýlk hamle: iki kare ileri izin ver (baþlangýç sýrasýnda)
+                int forwardY = (player == "white") ? y + 1 : y - 1;
+                int startRank = (player == "white") ? 1 : 6;
+
+                // piyonun bulunduðu sýra baþlangýç sýrasýysa ve iki kare ilerideki kare boþsa izin ver
+                if (GetYBoard() == startRank && sc.PositionOnBoard(x, forwardY) && sc.GetPosition(x, forwardY) == null)
+                {
+                    MovePlateSpawn(x, forwardY);
+                }
             }
         }
 
-        if(sc.PositionOnBoard(x + 1, y)&& sc.GetPosition(x+1, y) != null &&
-            sc.GetPosition(x+1,y).GetComponent<Chessman>().player != player)
+        // Saldýrý hamleleri (sað/sol çapraz)
+        if (sc.PositionOnBoard(x + 1, y) && sc.GetPosition(x + 1, y) != null &&
+            sc.GetPosition(x + 1, y).GetComponent<Chessman>().player != player)
         {
             MovePlateAttackSpawn(x + 1, y);
         }
