@@ -2,6 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
+
+[System.Serializable]
+public class AIMoveEventArgs
+{
+    public int fromX;
+    public int fromY;
+    public int toX;
+    public int toY;
+    public GameObject piece;
+    public GameObject target;
+    public bool capture => target != null;
+
+    public AIMoveEventArgs(int fx, int fy, int tx, int ty, GameObject p, GameObject t)
+    {
+        fromX = fx;
+        fromY = fy;
+        toX = tx;
+        toY = ty;
+        piece = p;
+        target = t;
+    }
+}
+
+[System.Serializable]
+public class AIMoveUnityEvent : UnityEvent<AIMoveEventArgs> { }
 
 public class AIController : MonoBehaviour
 {
@@ -10,15 +36,30 @@ public class AIController : MonoBehaviour
     public float baseThinkTime = 0.6f;
     private System.Random rnd = new System.Random();
 
+    // C# events (kod abonelikleri için)
+    public event System.Action OnThinkingStarted;
+    public event System.Action OnThinkingFinished;
+    public event System.Action<AIMoveEventArgs> OnMoveChosen;
+    public event System.Action<AIMoveEventArgs> OnMoveExecuted;
+    public event System.Action<AIMoveEventArgs> OnPieceCaptured;
+
+    // UnityEvents (Inspector'a baðlamak için)
+    [Header("AI Events (Inspector)")]
+    [SerializeField] public UnityEvent onThinkingStartedUnity;
+    [SerializeField] public UnityEvent onThinkingFinishedUnity;
+    [SerializeField] public AIMoveUnityEvent onMoveChosenUnity;
+    [SerializeField] public AIMoveUnityEvent onMoveExecutedUnity;
+    [SerializeField] public AIMoveUnityEvent onPieceCapturedUnity;
+
     private void Start()
     {
-        var go = GameObject.FindGameObjectWithTag("GameController");
-        if (go == null)
+        // GameObject.FindGameObjectWithTag yerine de bunu kullanabilirsin eðer sahnede tek bir Game scripti varsa:
+        controller = Object.FindAnyObjectByType<Game>();
+
+        if (controller == null)
         {
-            Debug.LogWarning("[AIController] GameController bulunamadý.");
-            return;
+            Debug.LogWarning("[AIController] Game bileþeni bulunamadý.");
         }
-        controller = go.GetComponent<Game>();
     }
 
     private void Update()
@@ -39,6 +80,8 @@ public class AIController : MonoBehaviour
     IEnumerator ThinkAndMove()
     {
         thinking = true;
+        OnThinkingStarted?.Invoke();
+        onThinkingStartedUnity?.Invoke();
 
         int elo = AIManager.Instance != null ? AIManager.Instance.Elo : 500;
         float think = baseThinkTime + Mathf.Clamp((1500 - elo) / 2000f, 0f, 1.0f);
@@ -49,6 +92,8 @@ public class AIController : MonoBehaviour
         {
             Debug.Log("[AIController] Hamle yok.");
             thinking = false;
+            OnThinkingFinished?.Invoke();
+            onThinkingFinishedUnity?.Invoke();
             yield break;
         }
 
@@ -109,6 +154,27 @@ public class AIController : MonoBehaviour
         sc.SetPosition(reference);
         sc.NextTurn();
         reference.GetComponent<Chessman>().DestroyMovePlates();
+
+        // --- YENÝ EKLENECEK KISIM BAÞLANGICI ---
+        // Sesi ve diðer sistemleri tetiklemek için Event Argümanlarýný hazýrlýyoruz
+        AIMoveEventArgs args = new AIMoveEventArgs(
+            chosen.fromX, chosen.fromY,
+            chosen.toX, chosen.toY,
+            chosen.piece,
+            chosen.target // eðer taþ yendiyse null deðil, normal hamleyse null gider
+        );
+
+        // C# Event'lerini tetikle
+        OnMoveExecuted?.Invoke(args);
+        if (chosen.target != null) OnPieceCaptured?.Invoke(args);
+
+        // Unity Event'lerini (Inspector) tetikle
+        onMoveExecutedUnity?.Invoke(args);
+        if (chosen.target != null) onPieceCapturedUnity?.Invoke(args);
+
+        OnThinkingFinished?.Invoke();
+        onThinkingFinishedUnity?.Invoke();
+        // --- YENÝ EKLENECEK KISIM BÝTÝÞÝ ---
 
         thinking = false;
     }

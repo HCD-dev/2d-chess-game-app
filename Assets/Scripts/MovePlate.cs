@@ -69,7 +69,11 @@ public class MovePlate : MonoBehaviour
         controller.GetComponent<Game>().SetPosition(reference);
         controller.GetComponent<Game>().NextTurn();
         reference.GetComponent<Chessman>().DestroyMovePlates();
-
+        PlayMoveSound soundScript = Object.FindAnyObjectByType<PlayMoveSound>();
+        if (soundScript != null)
+        {
+            soundScript.PlaySound();
+        }
     }
     
     public void SetCoords(int x, int y)
