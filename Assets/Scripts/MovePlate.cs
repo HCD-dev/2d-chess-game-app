@@ -38,27 +38,18 @@ public class MovePlate : MonoBehaviour
     {
         Debug.Log($"[MovePlate] Clicked target {matrixX},{matrixY} attack={attack}");
         controller = GameObject.FindGameObjectWithTag("GameController");
+
         if (attack)
         {
             GameObject cp = controller.GetComponent<Game>().GetPosition(matrixX, matrixY);
             if (cp != null)
             {
-                string cpName = cp.name ?? "";
-                if (cpName == "white_king_0")
-                {
-                    controller.GetComponent<Game>().Winner("black");
-                }
-                else if (cpName == "black_king_0")
-                {
-                    controller.GetComponent<Game>().Winner("white");
-                }
+                // Þah doðrudan yok edilmiyor, mat kontrolünü Game.cs üstleniyor.
                 Destroy(cp);
             }
-            else
-            {
-                Debug.LogWarning($"[MovePlate] Attack attempted on empty square {matrixX},{matrixY}");
-            }
         }
+
+        // Taþý yeni kareye taþýma iþlemleri
         controller.GetComponent<Game>().SetPositionEmpty(reference.GetComponent<Chessman>().GetXBoard(),
             reference.GetComponent<Chessman>().GetYBoard());
 
@@ -67,15 +58,18 @@ public class MovePlate : MonoBehaviour
         reference.GetComponent<Chessman>().SetCoords();
 
         controller.GetComponent<Game>().SetPosition(reference);
+
+        // Sýrayý geçirirken mat kontrolü burada tetiklenecek
         controller.GetComponent<Game>().NextTurn();
+
         reference.GetComponent<Chessman>().DestroyMovePlates();
+
         PlayMoveSound soundScript = Object.FindAnyObjectByType<PlayMoveSound>();
         if (soundScript != null)
         {
             soundScript.PlaySound();
         }
     }
-    
     public void SetCoords(int x, int y)
     {
         matrixX = x;

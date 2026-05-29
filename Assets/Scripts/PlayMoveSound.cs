@@ -51,13 +51,12 @@ public class PlayMoveSound : MonoBehaviour
             aiController.OnMoveExecuted += HandleMoveSound;
     }
 
-    // AI hamle yaptýðýnda bu event tetiklenecek
     private void HandleMoveSound(AIMoveEventArgs args)
     {
         PlaySound();
     }
 
-    // Hem senin hem AI'ýn doðrudan çaðýrabileceði genel fonksiyon
+   
     public void PlaySound()
     {
         if (moveClip == null || audioSource == null) return;

@@ -19,20 +19,17 @@ public class AIDropdown : MonoBehaviour
             return;
         }
 
-        // Baþlangýçta dropdown'un interaktifliði AI durumuna göre ayarlansýn
-        UpdateInteractable();
-
-        // Dropdown deðiþtiðinde AIManager'a bildir
+        // Önceki dinleyicileri temizle ki çift tetiklenme olmasýn
+        dropdown.onValueChanged.RemoveAllListeners();
+        // Dinamik olarak runtime'da kodu baðlýyoruz (Inspector uyarýsý vermez)
         dropdown.onValueChanged.AddListener(OnDropdownValueChanged);
 
-        // AIManager olaylarýna abone ol
         if (AIManager.Instance != null)
         {
             AIManager.Instance.OnAIChanged += HandleAIChanged;
             AIManager.Instance.OnEloChanged += HandleEloChanged;
         }
 
-        // Baþlangýç deðeri varsa senkronize et
         SyncDropdownToManager();
     }
 

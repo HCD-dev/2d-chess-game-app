@@ -156,13 +156,31 @@ public class Game : MonoBehaviour
 
     public void NextTurn()
     {
-        if (currentPlayer == "white")
-            currentPlayer = "black";
-        else
-            currentPlayer = "white";
-    }
+        if (currentPlayer == "white") currentPlayer = "black";
+        else currentPlayer = "white";
 
-    // Update artýk fare ile restart kontrolü yapmýyor
+        // Sýra gelen oyuncunun yasal hamlesi var mý kontrol et
+        if (!HasLegalMoves(currentPlayer))
+        {
+            if (IsInCheck(currentPlayer))
+            {
+                // Þah altýnda ve hamlesi yoksa = MAT!
+                string winner = (currentPlayer == "white") ? "black" : "white";
+                Winner(winner);
+            }
+            else
+            {
+                // Þah altýnda deðil ama hamlesi de yoksa = BERABERLÝK (PAT)
+                if (winnerText != null)
+                {
+                    winnerText.gameObject.SetActive(true);
+                    winnerText.text = "Stalemate! It's a Draw.";
+                }
+                gameOver = true;
+                if (restartButton != null) restartButton.gameObject.SetActive(true);
+            }
+        }
+    }
     public void Update()
     {
     }
@@ -255,10 +273,160 @@ public class Game : MonoBehaviour
         }
     }
 
-    // Inspector veya Button tarafýndan çaðrýlacak yeniden baþlatma metodu
     public void RestartGame()
     {
-        // (isteðe baðlý) RestoreBoardInteraction(); // gerek yok, sahne reload edecek
         SceneManager.LoadScene("Game");
+    }
+  
+
+    public GameObject GetKing(string playerColor)
+    {
+        Chessman[] allPieces = Object.FindObjectsByType<Chessman>(FindObjectsSortMode.None);
+        foreach (Chessman piece in allPieces)
+        {
+            string baseName = piece.name.EndsWith("_0") ? piece.name.Substring(0, piece.name.Length - 2) : piece.name;
+            if (piece.player == playerColor && (baseName == "white_king" || baseName == "black_king"))
+            {
+                return piece.gameObject;
+            }
+        }
+        return null;
+    }
+
+    public bool IsInCheck(string playerColor)
+    {
+        GameObject king = GetKing(playerColor);
+        if (king == null) return false;
+
+        int kingX = king.GetComponent<Chessman>().GetXBoard();
+        int kingY = king.GetComponent<Chessman>().GetYBoard();
+
+        // Sahnedeki tüm taþlarý tarayýp, rakip taþlarýn þahýn karesini tehdit edip etmediðine bakarýz
+        Chessman[] allPieces = Object.FindObjectsByType<Chessman>(FindObjectsSortMode.None);
+        foreach (Chessman piece in allPieces)
+        {
+            if (piece.player != playerColor)
+            {
+                // Þah durumunu kontrol ederken sonsuz döngüye girmemek için 
+                // sadece taþlarýn hamle yapabileceði kareleri doðrudan simüle edeceðiz.
+                if (CanPieceAttackSquare(piece, kingX, kingY))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    private bool CanPieceAttackSquare(Chessman piece, int targetX, int targetY)
+    {
+        // Taþýn normal þartlarda hareket kurallarýna göre o kareye ulaþýp ulaþamayacaðýný doðrular
+        // Yapay zeka scriptindeki mantýk veya Chessman'deki kurallarla paralellik gösterir
+        int x = piece.GetXBoard();
+        int y = piece.GetYBoard();
+        string baseName = piece.name.EndsWith("_0") ? piece.name.Substring(0, piece.name.Length - 2) : piece.name;
+
+        switch (baseName)
+        {
+            case "white_pawn":
+                return (targetY == y + 1 && Mathf.Abs(targetX - x) == 1);
+            case "black_pawn":
+                return (targetY == y - 1 && Mathf.Abs(targetX - x) == 1);
+            case "white_knight":
+            case "black_knight":
+                int dx = Mathf.Abs(targetX - x);
+                int dy = Mathf.Abs(targetY - y);
+                return (dx == 1 && dy == 2) || (dx == 2 && dy == 1);
+            case "white_king":
+            case "black_king":
+                return Mathf.Abs(targetX - x) <= 1 && Mathf.Abs(targetY - y) <= 1;
+            // Rook, Bishop ve Queen için düz/çapraz hat kontrolü (arada taþ var mý bakarak)
+            case "white_rook":
+            case "black_rook":
+                return CheckLineAttack(x, y, targetX, targetY, true, false);
+            case "white_bishop":
+            case "black_bishop":
+                return CheckLineAttack(x, y, targetX, targetY, false, true);
+            case "white_queen":
+            case "black_queen":
+                return CheckLineAttack(x, y, targetX, targetY, true, true);
+        }
+        return false;
+    }
+
+
+
+
+
+    private bool CheckLineAttack(int x, int y, int tx, int ty, bool allowStraight, bool allowDiagonal)
+    {
+        int dx = tx - x;
+        int dy = ty - y;
+
+        bool isStraight = (dx == 0 || dy == 0);
+        bool isDiagonal = (Mathf.Abs(dx) == Mathf.Abs(dy));
+
+        if (isStraight && !allowStraight) return false;
+        if (isDiagonal && !allowDiagonal) return false;
+        if (!isStraight && !isDiagonal) return false;
+
+        int stepX = System.Math.Sign(dx);
+        int stepY = System.Math.Sign(dy);
+
+        int curX = x + stepX;
+        int curY = y + stepY;
+
+        while (curX != tx || curY != ty)
+        {
+            if (GetPosition(curX, curY) != null) return false; // Arada taþ var, hat kapalý
+            curX += stepX;
+            curY += stepY;
+        }
+        return true;
+    }
+    public bool SimulationLeavesKingInCheck(GameObject piece, int toX, int toY)
+    {
+        Chessman cm = piece.GetComponent<Chessman>();
+        int fromX = cm.GetXBoard();
+        int fromY = cm.GetYBoard();
+        string playerColor = cm.player;
+
+        // Hedef karedeki orijinal taþý sakla
+        GameObject targetPiece = GetPosition(toX, toY);
+
+        // Tahtayý geçici olarak yeni hamleye göre güncelle
+        positions[fromX, fromY] = null;
+        positions[toX, toY] = piece;
+        cm.SetXBoard(toX);
+        cm.SetYBoard(toY);
+        if (targetPiece != null) targetPiece.SetActive(false); // Simülasyonda yok sayýlmasý için gizle
+
+        // Bu sanal durumda þah altýnda mýyýz?
+        bool inCheck = IsInCheck(playerColor);
+
+        // Tahtayý ve taþ pozisyonlarýný eski haline geri yükle
+        positions[fromX, fromY] = piece;
+        positions[toX, toY] = targetPiece;
+        cm.SetXBoard(fromX);
+        cm.SetYBoard(fromY);
+        if (targetPiece != null) targetPiece.SetActive(true);
+
+        return inCheck;
+    }
+    public bool HasLegalMoves(string playerColor)
+    {
+        Chessman[] allPieces = Object.FindObjectsByType<Chessman>(FindObjectsSortMode.None);
+        foreach (Chessman piece in allPieces)
+        {
+            if (piece.player == playerColor)
+            {
+                // Taþýn üretebildiði hamle plakalarýný toplayýp legal olan var mý bakacaðýz
+                // Bu mantýðý tetiklemek için Chessman'e entegre ettiðimiz filtreyi kullanabiliriz.
+                if (piece.HasAnyLegalMove())
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

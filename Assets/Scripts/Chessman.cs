@@ -301,11 +301,19 @@ public class Chessman : MonoBehaviour
 
     public void MovePlateSpawn(int matrixX, int matrixY)
     {
-        // Board üzerinden world pozisyonu hesapla (scale baðýmsýz)
+        // YENÝ: Bu hamle yapýldýðýnda þah tehlikeye giriyorsa plakayý oluþturma (Legal Moves Filtresi)
+        Game gameScript = controller.GetComponent<Game>();
+        if (gameScript.SimulationLeavesKingInCheck(gameObject, matrixX, matrixY))
+        {
+            return; // Geçersiz hamle, þahýmýzý korumuyor veya açmazdaki taþý oynatýyoruz!
+        }
+
+        // Mevcut kodunuz aynen devam ediyor...
         GameObject board = GameObject.FindGameObjectWithTag("Board");
         Vector3 spawnPos;
         if (board != null && board.GetComponent<SpriteRenderer>() != null)
         {
+            // ... (Kendi mevcut dünya pozisyonu hesaplama kodlarýnýz) ...
             SpriteRenderer sr = board.GetComponent<SpriteRenderer>();
             Bounds b = sr.bounds;
             float tileSizeX = b.size.x / 8f;
@@ -317,13 +325,9 @@ public class Chessman : MonoBehaviour
         }
         else
         {
-            // Fallback: önceki sabit dönüþüm (geriye uyumluluk)
             float x = matrixX;
             float y = matrixY;
-            x *= 0.66f;
-            y *= 0.66f;
-            x += -2.3f;
-            y += -2.3f;
+            x *= 0.66f; y *= 0.66f; x += -2.3f; y += -2.3f;
             spawnPos = new Vector3(x, y, -3.0f);
         }
 
@@ -332,14 +336,21 @@ public class Chessman : MonoBehaviour
         mpScript.SetReference(gameObject);
         mpScript.SetCoords(matrixX, matrixY);
     }
-
     public void MovePlateAttackSpawn(int matrixX, int matrixY)
     {
-        // Board üzerinden world pozisyonu hesapla (scale baðýmsýz)
+        // YENÝ: Bu saldýrý hamlesi yapýldýðýnda þah tehlikeye giriyorsa plakayý oluþturma
+        Game gameScript = controller.GetComponent<Game>();
+        if (gameScript.SimulationLeavesKingInCheck(gameObject, matrixX, matrixY))
+        {
+            return;
+        }
+
+        // Mevcut kodunuz aynen devam ediyor...
         GameObject board = GameObject.FindGameObjectWithTag("Board");
         Vector3 spawnPos;
         if (board != null && board.GetComponent<SpriteRenderer>() != null)
         {
+            // ... (Kendi mevcut dünya pozisyonu hesaplama kodlarýnýz) ...
             SpriteRenderer sr = board.GetComponent<SpriteRenderer>();
             Bounds b = sr.bounds;
             float tileSizeX = b.size.x / 8f;
@@ -351,13 +362,9 @@ public class Chessman : MonoBehaviour
         }
         else
         {
-            // Fallback: önceki sabit dönüþüm
             float x = matrixX;
             float y = matrixY;
-            x *= 0.66f;
-            y *= 0.66f;
-            x += -2.3f;
-            y += -2.3f;
+            x *= 0.66f; y *= 0.66f; x += -2.3f; y += -2.3f;
             spawnPos = new Vector3(x, y, -3.0f);
         }
 
@@ -367,6 +374,30 @@ public class Chessman : MonoBehaviour
         mpScript.SetReference(gameObject);
         mpScript.SetCoords(matrixX, matrixY);
     }
+    // Taþýn plakalarý oluþturulduðunda sahneye en az 1 tane legal plaka çýkýp çýkmadýðýna bakar
+    public bool HasAnyLegalMove()
+    {
+        // Önceki plakalarý temizle
+        DestroyMovePlates();
 
+        // Geçici olarak plakalarý tetikle
+        InitiateMovePlates();
+
+        // Sahneye bu taþ yüzünden eklenen plakalarý say
+        GameObject[] movePlates = GameObject.FindGameObjectsWithTag("MovePlate");
+        int count = 0;
+        foreach (GameObject mp in movePlates)
+        {
+            if (mp.GetComponent<MovePlate>().GetReference() == gameObject)
+            {
+                count++;
+            }
+        }
+
+        // Temizle ki tahtada görünmesinler
+        DestroyMovePlates();
+
+        return count > 0;
+    }
 
 }

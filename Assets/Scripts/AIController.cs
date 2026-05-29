@@ -39,7 +39,7 @@ public class AIController : MonoBehaviour
     // C# events (kod abonelikleri için)
     public event System.Action OnThinkingStarted;
     public event System.Action OnThinkingFinished;
-    public event System.Action<AIMoveEventArgs> OnMoveChosen;
+    //public event System.Action<AIMoveEventArgs> OnMoveChosen;
     public event System.Action<AIMoveEventArgs> OnMoveExecuted;
     public event System.Action<AIMoveEventArgs> OnPieceCaptured;
 
